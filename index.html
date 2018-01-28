@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>soketto</title>
+  <style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { height:100%;}
+  body { font: 13px Helvetica, Arial; height:100%; }
+  form { background: #ddd; padding: 3px; width: 100%; height:100%; display:flex; justify-content: center; align-items: center;}
+  form input { border: 0; padding: 10px; width: 84%; margin-right: .5%; height:95%; }
+  #nick { border: 0; padding-top: 10px; width:8%; margin-right:.5%;}
+  form button { width: 9%; background: #cc4a4a; color: #fff; border: none; padding: 10px; }
+  #messages { list-style-type: none; margin: 0; padding: 0; font-size:16pt;font-family:arial;}
+  #messages li { padding: 5px 10px; width:100%; }
+  #messages li:nth-child(odd) { background: #eee; }
+  .wrapper{
+    width:100%;
+    height:100%;
+
+    margin:auto;
+  }
+  .main_window{
+    display:flex;
+    width:100%;
+    height:95%;
+  }
+  .msg_box{
+    overflow:hidden;
+    width:80%;
+  }
+  .msg_box_scroll{
+    position: relative;
+    height:100%;
+    overflow-y: scroll;
+    /* margin-right:-15px; */
+  }
+  .user_list{
+    width:20%;
+  }
+  .chatbar{
+    width:100%;
+    height:5%;
+
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+  }
+  </style>
+</head>
+<body>
+  <div class="wrapper">
+    <div class="main_window">
+      <div class="msg_box">
+        <div class="msg_box_scroll">
+          <ul id="messages">
+          </ul>
+        </div>
+      </div>
+      <div class="user_list">
+      </div>
+    </div>
+    <div class="chatbar">
+      <form action="">
+        <input autocomplete="off" id="m" placeholder="enter your message..." />
+        <input autocomplete="on" id="nick" type="text" placeholder="nickname...">
+        <button>Send</button>
+      </form>
+    </div>
+  </div>
+
+  <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
+  <script src="/socket.io/socket.io.js" charset="utf-8"></script>
+  <script>
+  function scrollBottom(){
+    let scrollbox = $('.msg_box_scroll');
+    let e = $('#messages');
+    scrollbox.scrollTop(e.height());
+  }
+  var socket = io({nick: $('#nick').val()});
+  socket.on('connect', function(){
+    socket.emit('client_connect', {nick: $('#nick').val()});
+  });
+
+  $('form').submit(function(){
+    let chat_msg = {
+      msg: $('#m').val(),
+      nick: $('#nick').val()
+    };
+    socket.emit('chat_message', chat_msg);
+    $('#messages').append($('<li>').text(chat_msg.nick+": "+chat_msg.msg));
+    $('#m').val('');
+    scrollBottom();
+    return false;
+  });
+  socket.on('chat_message', function(chat_msg){
+    $('#messages').append($('<li>').text(chat_msg.nick+": "+chat_msg.msg));
+    scrollBottom();
+  });
+  socket.on('server_message', function(msg){
+    $('#messages').append($('<li>').text(msg.msg));
+  });
+  socket.on('remove_dc_user', function(id){
+
+  });
+  </script>
+</body>
+</html>
