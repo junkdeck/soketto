@@ -64,7 +64,7 @@
     <div class="chatbar">
       <form action="">
         <input autocomplete="off" id="m" placeholder="enter your message..." />
-        <input autocomplete="on" id="nick" type="text" placeholder="nickname...">
+        <input autocomplete="on" id="nick" value='user' type="text" placeholder="nickname...">
         <button>Send</button>
       </form>
     </div>
@@ -79,6 +79,7 @@
     scrollbox.scrollTop(e.height());
   }
   var socket = io({nick: $('#nick').val()});
+
   socket.on('connect', function(){
     socket.emit('client_connect', {nick: $('#nick').val()});
   });
