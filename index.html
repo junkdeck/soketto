@@ -128,6 +128,7 @@
   });
   socket.on('server_message', function(msg){
     $('#messages').append($('<li>').text(msg));
+    scrollBottom();
   });
   socket.on('online_users_list', function(list){
     // receives a 'connected_users' array
