@@ -1,5 +1,5 @@
-# soketto
+# (つ >ω●)つ soketto
 
 nodejs webchat using sockets
 
-super rudimentary atm, but it works!! 
+multiplayer notepad with nicknames, an online users list and logging. still pretty rudimentary.
