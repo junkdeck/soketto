@@ -1,4 +1,4 @@
-# (つ >ω●)つ soketto
+(つ >ω●)つ soketto
 
 nodejs webchat using sockets
 
