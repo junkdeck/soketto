@@ -49,7 +49,7 @@ io.on('connect', (socket) => {
     logEntry(socket.id +":"+data.nick+" has connected.");
     // 'client_connect' is sent from the client directly after a connection to transfer user-specific data
     // notify users of new connection
-    io.emit('server_message', {msg: data.nick+' has connected'});
+    io.emit('server_message', data.nick+' has connected');
     // finds the array index of the connected user's socket id
     let user_id = getUserIndexBySocketId(connected_users, socket.id);
     // updates the nickname on connection
@@ -67,7 +67,7 @@ io.on('connect', (socket) => {
 
     // notifies users of disconnect
     logEntry(socket.id+":"+connected_users[user_id].nick+" disconnected");
-    io.emit('server_message', {msg:connected_users[user_id].nick+' disconnected'});
+    io.emit('server_message', connected_users[user_id].nick+' disconnected');
     // removes the disconnected user
     connected_users.splice(user_id, 1);
     // distributes the updated userlist
@@ -77,6 +77,7 @@ io.on('connect', (socket) => {
   socket.on('nick_change', (nick) => {
     let user_id = getUserIndexBySocketId(connected_users, socket.id);
     logEntry(connected_users[user_id].nick+" changed nickname to: "+nick);
+    io.emit('server_message', connected_users[user_id].nick+" changed name to "+nick);
     connected_users[user_id].nick = nick;
     io.emit('online_users_list', connected_users);
   });
