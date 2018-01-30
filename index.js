@@ -10,9 +10,24 @@ function getUserIndexBySocketId(userArray, socketId){
   }).indexOf(socketId);
 }
 
+function logEntry(data){
+  console.log(data);
+  let date = new Date();
+  if(logging){
+    fs.appendFile("./chatlog",  date.getDate()+"/"+(date.getMonth()+1)+"/"+date.getFullYear()+
+    " "+date.getHours()+":"+date.getMinutes()+" - "+data+"\n", (err) => {
+      if(err){return console.log(err);}
+      console.log("file saved!");
+    });
+  }
+}
+
 var app = require('express')();
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
+// filesystem for logging
+var fs = require('fs');
+const logging = true;
 
 // keeps track of currently connected users - used for the "who's online" list in the gui
 var connected_users = new Array();
@@ -24,7 +39,6 @@ app.get('/', (req,res) => {
 
 io.on('connect', (socket) => {
   // send login message to all users, save user in 'connected_users', update online list
-  console.log(socket.id +" has connected.");
 
   // stores socket id with nickname for display
   connected_users.push({
@@ -33,6 +47,7 @@ io.on('connect', (socket) => {
   });
 
   socket.on('client_connect', function(data){
+    logEntry(socket.id +":"+data.nick+" has connected.");
     // 'client_connect' is sent from the client directly after a connection to transfer user-specific data
     // notify users of new connection
     io.emit('server_message', {msg: data.nick+' has connected'});
@@ -42,7 +57,6 @@ io.on('connect', (socket) => {
     connected_users[user_id].nick = data.nick;
     // distributes the updated userlist
     io.emit('online_users_list', connected_users);
-    console.log(connected_users[user_id].nick + " connected");
   });
 
   socket.on('disconnect', () => {
@@ -53,7 +67,7 @@ io.on('connect', (socket) => {
     }).indexOf(socket.id);
 
     // notifies users of disconnect
-    console.log(connected_users[user_id].nick+" disconnected");
+    logEntry(socket.id+":"+connected_users[user_id].nick+" disconnected");
     io.emit('server_message', {msg:connected_users[user_id].nick+' disconnected'});
     // removes the disconnected user
     connected_users.splice(user_id, 1);
@@ -62,11 +76,11 @@ io.on('connect', (socket) => {
   });
 
   socket.on('chat_message', (msg) => {
-    console.log(msg.nick + ": " + msg.msg);
+    logEntry(msg.nick + ": " + msg.msg);
     socket.broadcast.emit('chat_message', msg);
   });
 });
 
 http.listen(3000, () => {
-  console.log('listening on *:3000');
+  logEntry('listening on *:3000');
 });
