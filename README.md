@@ -1,5 +1,5 @@
-(つ >ω●)つ soketto
+# (つ >ω●)つ soketto
 
-nodejs webchat using sockets
+nodejs webchat using sockets.io
 
-multiplayer notepad with nicknames, an online users list and logging. still pretty rudimentary.
+nicknames, online user list and logging.
