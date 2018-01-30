@@ -92,6 +92,7 @@
     scrollbox.scrollTop(e.height());
   }
   var socket = io({nick: $('#nick').val()});
+  let nickname = "";
 
   socket.on('connect', function(){
     socket.emit('client_connect', {nick: $('#nick').val()});
@@ -107,6 +108,18 @@
     $('#m').val('');
     scrollBottom();
     return false;
+  });
+  $('#nick').focusin(function(){
+    nickname = $(this).val();
+  })
+  $('#nick').focusout(function(){
+    if(nickname != $(this).val()){
+      console.log("changing nickname on server!");
+      nickname = $(this).val();
+      socket.emit('nick_change', nickname)
+    }else{
+      console.log("same nickname, no change!");
+    }
   });
 
   socket.on('chat_message', function(chat_msg){

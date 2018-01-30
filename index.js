@@ -17,7 +17,6 @@ function logEntry(data){
     fs.appendFile("./chatlog",  date.getDate()+"/"+(date.getMonth()+1)+"/"+date.getFullYear()+
     " "+date.getHours()+":"+date.getMinutes()+" - "+data+"\n", (err) => {
       if(err){return console.log(err);}
-      console.log("file saved!");
     });
   }
 }
@@ -75,9 +74,19 @@ io.on('connect', (socket) => {
     io.emit('online_users_list', connected_users);
   });
 
+  socket.on('nick_change', (nick) => {
+    let user_id = getUserIndexBySocketId(connected_users, socket.id);
+    logEntry(connected_users[user_id].nick+" changed nickname to: "+nick);
+    connected_users[user_id].nick = nick;
+    io.emit('online_users_list', connected_users);
+  });
+
   socket.on('chat_message', (msg) => {
     logEntry(msg.nick + ": " + msg.msg);
     socket.broadcast.emit('chat_message', msg);
+    let user_id = getUserIndexBySocketId(connected_users, socket.id);
+    // connected_users[user_id].nick = msg.nick;
+    io.emit('online_users_list', connected_users);
   });
 });
 
