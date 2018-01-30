@@ -1,6 +1,6 @@
 // cool stuff to implement:
 // "user is typing"
-// show currently online users
+// logging
 
 function getUserIndexBySocketId(userArray, socketId){
   // finds the array index of a given socket id
