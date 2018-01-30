@@ -113,7 +113,7 @@
     }
     return false;
   });
-  
+
   $('#nick').focusin(function(){
     nickname = $(this).val();
   })
@@ -128,7 +128,7 @@
   });
 
   if($('#m').val()){
-    console.log("AH!");
+    
   }
 
   socket.on('chat_message', function(chat_msg){

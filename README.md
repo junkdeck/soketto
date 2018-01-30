@@ -1,5 +1,5 @@
 # (つ >ω●)つ soketto
 
-nodejs webchat using sockets.io
+node webchat using sockets.io & express
 
 nicknames, online user list and logging.
