@@ -47,6 +47,19 @@
     align-items: center;
     justify-content: center;
   }
+  .user_box{
+    display: block;
+    padding: 10px;
+    font-size: 12pt;
+    text-transform: uppercase;
+    font-weight: bold;;
+
+    background: #eba7a7;
+    color: #fff;
+  }
+  .user_box:nth-child(even){
+    background: #e0d7d7;
+  }
   </style>
 </head>
 <body>
@@ -95,6 +108,7 @@
     scrollBottom();
     return false;
   });
+
   socket.on('chat_message', function(chat_msg){
     $('#messages').append($('<li>').text(chat_msg.nick+": "+chat_msg.msg));
     scrollBottom();
@@ -102,8 +116,16 @@
   socket.on('server_message', function(msg){
     $('#messages').append($('<li>').text(msg.msg));
   });
-  socket.on('remove_dc_user', function(id){
-
+  socket.on('online_users_list', function(list){
+    // receives a 'connected_users' array
+    $(".user_list").empty();
+    list.forEach((user) => {
+      console.log(user);
+      $(".user_list").append("\
+      <div class='user_box'>\
+      "+user.nick+"\
+      </div>")
+    });
   });
   </script>
 </body>
