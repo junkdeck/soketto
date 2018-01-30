@@ -114,13 +114,17 @@
   })
   $('#nick').focusout(function(){
     if(nickname != $(this).val()){
-      console.log("changing nickname on server!");
+      // update the nickname on the server
       nickname = $(this).val();
       socket.emit('nick_change', nickname)
     }else{
-      console.log("same nickname, no change!");
+      // same nickname, no change
     }
   });
+
+  if($('#m').val()){
+    console.log("AH!");
+  }
 
   socket.on('chat_message', function(chat_msg){
     $('#messages').append($('<li>').text(chat_msg.nick+": "+chat_msg.msg));
@@ -134,7 +138,6 @@
     // receives a 'connected_users' array
     $(".user_list").empty();
     list.forEach((user) => {
-      console.log(user);
       $(".user_list").append("\
       <div class='user_box'>\
       "+user.nick+"\

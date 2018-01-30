@@ -85,9 +85,6 @@ io.on('connect', (socket) => {
   socket.on('chat_message', (msg) => {
     logEntry(msg.nick + ": " + msg.msg);
     socket.broadcast.emit('chat_message', msg);
-    let user_id = getUserIndexBySocketId(connected_users, socket.id);
-    // connected_users[user_id].nick = msg.nick;
-    io.emit('online_users_list', connected_users);
   });
 });
 
