@@ -127,9 +127,13 @@
     }
   });
 
-  if($('#m').val()){
-    
-  }
+  setInterval(function(){
+    let is_typing = $("#m").val() ? true : false;
+    // check if user is typing every 500ms
+    if($("#m").val()){
+      socket.emit('user_typing', is_typing);
+    }
+  }, 2500)
 
   socket.on('chat_message', function(chat_msg){
     $('#messages').append($('<li>').text(chat_msg.nick+": "+chat_msg.msg));

@@ -61,9 +61,7 @@ io.on('connect', (socket) => {
   socket.on('disconnect', () => {
     // broadcast user disconnect and remove from 'connected users' list
     // finds the array index of the disconnected user's socket id
-    let user_id = connected_users.map((user) => {
-      return user._id;
-    }).indexOf(socket.id);
+    let user_id = getUserIndexBySocketId(connected_users, socket.id);
 
     // notifies users of disconnect
     logEntry(socket.id+":"+connected_users[user_id].nick+" disconnected");
@@ -86,6 +84,12 @@ io.on('connect', (socket) => {
     logEntry(msg.nick + ": " + msg.msg);
     socket.broadcast.emit('chat_message', msg);
   });
+
+  socket.on('user_typing', (typing) => {
+    let user_id = getUserIndexBySocketId(connected_users, socket.id);
+    console.log(connected_users[user_id].nick+" is typing.");
+    io.emit('user_typing', socket.id)
+  })
 });
 
 http.listen(3000, () => {
