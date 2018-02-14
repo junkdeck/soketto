@@ -29,7 +29,7 @@ var fs = require('fs');
 const logging = true;
 
 // keeps track of currently connected users - used for the "who's online" list in the gui
-var connected_users = new Array();
+var connected_users = new Object();
 
 app.get('/', (req,res) => {
   // serves the HTML file to any client when connecting to *:3000
@@ -39,44 +39,39 @@ app.get('/', (req,res) => {
 io.on('connect', (socket) => {
   // send login message to all users, save user in 'connected_users', update online list
 
-  // stores socket id with nickname for display
-  connected_users.push({
-    _id: socket.id,
-    nick: "user"
-  });
+  // stores connected user info with socket.id as the key with an object containing properties as value
+  connected_users[socket.id] = {
+    nick: 'user'
+  }
 
   socket.on('client_connect', function(data){
     logEntry(socket.id +":"+data.nick+" has connected.");
     // 'client_connect' is sent from the client directly after a connection to transfer user-specific data
     // notify users of new connection
     io.emit('server_message', data.nick+' has connected');
-    // finds the array index of the connected user's socket id
-    let user_id = getUserIndexBySocketId(connected_users, socket.id);
     // updates the nickname on connection
-    connected_users[user_id].nick = data.nick;
+    connected_users[socket.id].nick = data.nick;
     // distributes the updated userlist
     io.emit('online_users_list', connected_users);
   });
 
   socket.on('disconnect', () => {
     // broadcast user disconnect and remove from 'connected users' list
-    // finds the array index of the disconnected user's socket id
-    let user_id = getUserIndexBySocketId(connected_users, socket.id);
-
     // notifies users of disconnect
-    logEntry(socket.id+":"+connected_users[user_id].nick+" disconnected");
-    io.emit('server_message', connected_users[user_id].nick+' disconnected');
+    console.log(socket.id + ' disconnected');
+    logEntry(socket.id+":"+connected_users[socket.id].nick+" disconnected");
+    io.emit('server_message', connected_users[socket.id].nick+' disconnected');
     // removes the disconnected user
-    connected_users.splice(user_id, 1);
+    console.log(connected_users);
+    delete connected_users[socket.id];
     // distributes the updated userlist
     io.emit('online_users_list', connected_users);
   });
 
   socket.on('nick_change', (nick) => {
-    let user_id = getUserIndexBySocketId(connected_users, socket.id);
-    logEntry(connected_users[user_id].nick+" changed nickname to: "+nick);
-    io.emit('server_message', connected_users[user_id].nick+" changed name to "+nick);
-    connected_users[user_id].nick = nick;
+    logEntry(connected_users[socket.id].nick+" changed nickname to: "+nick);
+    io.emit('server_message', connected_users[socket.id].nick+" changed name to "+nick);
+    connected_users[socket.id].nick = nick;
     io.emit('online_users_list', connected_users);
   });
 
@@ -86,8 +81,7 @@ io.on('connect', (socket) => {
   });
 
   socket.on('user_typing', (typing) => {
-    let user_id = getUserIndexBySocketId(connected_users, socket.id);
-    console.log(connected_users[user_id].nick+" is typing.");
+    console.log(connected_users[socket.id].nick+" is typing.");
     io.emit('user_typing', socket.id)
   })
 });

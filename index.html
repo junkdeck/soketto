@@ -146,6 +146,9 @@
   socket.on('online_users_list', function(list){
     // receives a 'connected_users' array
     $(".user_list").empty();
+
+    console.log(JSON.stringify(list))
+
     list.forEach((user) => {
       $(".user_list").append("\
       <div class='user_box'>\
