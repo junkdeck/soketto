@@ -147,14 +147,12 @@
     // receives a 'connected_users' array
     $(".user_list").empty();
 
-    console.log(JSON.stringify(list))
-
-    list.forEach((user) => {
+    for(var id in list){
       $(".user_list").append("\
       <div class='user_box'>\
-      "+user.nick+"\
-      </div>")
-    });
+      "+list[id].nick+"\
+      </div>");
+    }
   });
   </script>
 </body>
