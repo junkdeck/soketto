@@ -1,14 +1,5 @@
 // cool stuff to implement:
 // "user is typing"
-// logging
-
-function getUserIndexBySocketId(userArray, socketId){
-  // finds the array index of a given socket id
-  // takes an Object array with a '_id' key and a socket id
-  return userArray.map((user) => {
-    return user._id;
-  }).indexOf(socketId);
-}
 
 function logEntry(data){
   console.log(data);
