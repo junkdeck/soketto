@@ -2,4 +2,4 @@
 
 node webchat using sockets.io & express
 
-nicknames, online user list and logging.
+nicknames, online user list, user typing state and logging.
