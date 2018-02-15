@@ -21,10 +21,8 @@ const logging = true;
 
 // keeps track of currently connected users
 // socket.id is used for key with another object for value which in turn contains the nickname.
-// could be simplified but this also allows for other data such as connection time to be stored with the id.
+// also keeps track of whether or not a user is typing
 var connected_users = new Object();
-// keeps track of users currently typing.
-var users_typing = new Array();
 
 app.get('/', (req,res) => {
   // serves the HTML file to any client when connecting to *:3000
@@ -76,9 +74,8 @@ io.on('connect', (socket) => {
   });
 
   socket.on('user_typing', (typing) => {
-    console.log(connected_users[socket.id].nick+" is typing.");
-    console.log(typing);
-    io.emit('user_typing', socket.id)
+    connected_users[socket.id].is_typing = typing;
+    socket.broadcast.emit('online_users_list', connected_users);
   })
 });
 

@@ -128,12 +128,10 @@
   });
 
   setInterval(function(){
+    // check if user is typing
     let is_typing = $("#m").val() ? true : false;
-    // check if user is typing every 500ms
-    if($("#m").val()){
-      socket.emit('user_typing', is_typing);
-    }
-  }, 2500)
+    socket.emit('user_typing', is_typing);
+  }, 200)
 
   socket.on('chat_message', function(chat_msg){
     $('#messages').append($('<li>').text(chat_msg.nick+": "+chat_msg.msg));
@@ -151,9 +149,10 @@
     $(".user_list").empty();
 
     for(var id in list){
+      let user_is_typing = list[id].is_typing ? ' is typing' : '';
       $(".user_list").append("\
       <div class='user_box'>\
-      "+list[id].nick+"\
+      "+list[id].nick+user_is_typing+"\
       </div>");
     }
   });
