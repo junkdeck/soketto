@@ -19,8 +19,12 @@ var io = require('socket.io')(http);
 var fs = require('fs');
 const logging = true;
 
-// keeps track of currently connected users - used for the "who's online" list in the gui
+// keeps track of currently connected users
+// socket.id is used for key with another object for value which in turn contains the nickname.
+// could be simplified but this also allows for other data such as connection time to be stored with the id.
 var connected_users = new Object();
+// keeps track of users currently typing.
+var users_typing = new Array();
 
 app.get('/', (req,res) => {
   // serves the HTML file to any client when connecting to *:3000
