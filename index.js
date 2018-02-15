@@ -66,13 +66,14 @@ io.on('connect', (socket) => {
     io.emit('online_users_list', connected_users);
   });
 
-  socket.on('chat_message', (msg) => {
-    logEntry(msg.nick + ": " + msg.msg);
-    socket.broadcast.emit('chat_message', msg);
+  socket.on('chat_message', (msg_body) => {
+    logEntry(connected_users[socket.id].nick + ": " + msg_body);
+    socket.broadcast.emit('chat_message', {msg: msg_body, nick: connected_users[socket.id].nick});
   });
 
   socket.on('user_typing', (typing) => {
     console.log(connected_users[socket.id].nick+" is typing.");
+    console.log(typing);
     io.emit('user_typing', socket.id)
   })
 });

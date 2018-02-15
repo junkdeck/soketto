@@ -99,13 +99,10 @@
   });
 
   $('form').submit(function(){
-    let chat_msg = {
-      msg: $('#m').val(),
-      nick: $('#nick').val()
-    };
-    if(chat_msg.msg && !$("#nick").is(':focus')){
-      socket.emit('chat_message', chat_msg);
-      $('#messages').append($('<li>').text(chat_msg.nick+": "+chat_msg.msg));
+    let msg = $('#m').val();
+    if(msg && !$("#nick").is(':focus')){
+      socket.emit('chat_message', msg);
+      $('#messages').append($('<li>').text($("#nick").val()+": "+msg));
       $('#m').val('');
       scrollBottom();
     }else if($('#nick').is(':focus')){
@@ -142,6 +139,9 @@
   socket.on('server_message', function(msg){
     $('#messages').append($('<li>').text(msg));
     scrollBottom();
+  });
+  socket.on('user_typing', function(id){
+    console.log(id);
   });
   socket.on('online_users_list', function(list){
     // receives a 'connected_users' array
