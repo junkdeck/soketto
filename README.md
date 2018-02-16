@@ -8,15 +8,15 @@ nicknames, online user list, user typing state and logging.
 
 clone the git repository:
 
-`git clone https://github.com/junkdeck/soketto`
+```git clone https://github.com/junkdeck/soketto```
 
 install dependencies with npm:
 
-`npm i`
+```npm i```
 
 launch the app through node:
 
-`node .` or `node app.js`
+```node .``` or ```node app.js```
 
 then check it out at `localhost:3000`!
 
