@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>soketto</title>
+  <link rel="stylesheet" href="./master.css">
+</head>
+<body>
+  <div class="wrapper">
+    <div class="main_window">
+      <div class="msg_box">
+        <div class="msg_box_scroll">
+          <ul id="messages">
+          </ul>
+        </div>
+      </div>
+      <div class="user_list">
+      </div>
+    </div>
+    <div class="chatbar">
+      <form action="">
+        <input autocomplete="off" id="m" placeholder="enter your message..." />
+        <input autocomplete="on" id="nick" value='user' type="text" placeholder="nickname...">
+        <button>Send</button>
+      </form>
+    </div>
+  </div>
+
+  <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
+  <script src="/socket.io/socket.io.js" charset="utf-8"></script>
+  <script src="./client.js" charset="utf-8"></script>
+</body>
+</html>

@@ -1,6 +1,3 @@
-// cool stuff to implement:
-// "user is typing"
-
 function logEntry(data){
   console.log(data);
   let date = new Date();
@@ -12,12 +9,15 @@ function logEntry(data){
   }
 }
 
-var app = require('express')();
+var express = require('express');
+var app = express();
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
 // filesystem for logging
 var fs = require('fs');
 const logging = true;
+// static file folders
+app.use(express.static('static'));
 
 // keeps track of currently connected users
 // socket.id is used for key with another object for value which in turn contains the nickname.
@@ -26,7 +26,7 @@ var connected_users = new Object();
 
 app.get('/', (req,res) => {
   // serves the HTML file to any client when connecting to *:3000
-  res.sendFile(__dirname + '/index.html');
+  res.sendFile('./index.html');
 });
 
 io.on('connect', (socket) => {
@@ -51,11 +51,9 @@ io.on('connect', (socket) => {
   socket.on('disconnect', () => {
     // broadcast user disconnect and remove from 'connected users' list
     // notifies users of disconnect
-    console.log(socket.id + ' disconnected');
     logEntry(socket.id+":"+connected_users[socket.id].nick+" disconnected");
     io.emit('server_message', connected_users[socket.id].nick+' disconnected');
     // removes the disconnected user
-    console.log(connected_users);
     delete connected_users[socket.id];
     // distributes the updated userlist
     io.emit('online_users_list', connected_users);
